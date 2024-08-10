@@ -101,7 +101,7 @@ namespace XIVSlothCombo.Combos.PvE
 
             public static UserFloat
                 SAM_ST_Higanbana_Threshold = new("SAM_ST_Higanbana_Threshold", 1),
-                SAM_ST_KenkiOvercapAmount = new("SamKenkiOvercapAmount", 50),
+                SAM_ST_KenkiOvercapAmount = new("SAM_ST_KenkiOvercapAmount", 50),
                 SAM_AoE_KenkiOvercapAmount = new("SamAOEKenkiOvercapAmount", 50),
                  SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 1);
         }
@@ -112,13 +112,13 @@ namespace XIVSlothCombo.Combos.PvE
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
                 SAMGauge? gauge = GetJobGauge<SAMGauge>();
-                float SamKenkiOvercapAmount = Config.SAM_ST_KenkiOvercapAmount;
+                float SAM_ST_KenkiOvercapAmount = Config.SAM_ST_KenkiOvercapAmount;
 
                 if (actionID is Yukikaze)
                 {
                     if (CanWeave(actionID))
                     {
-                        if (gauge.Kenki >= SamKenkiOvercapAmount && LevelChecked(Shinten))
+                        if (gauge.Kenki >= SAM_ST_KenkiOvercapAmount && LevelChecked(Shinten))
                             return Shinten;
                     }
 
@@ -127,10 +127,10 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (comboTime > 0)
                     {
-                        if (lastComboMove is Hakaze && LevelChecked(Yukikaze))
+                        if (lastComboMove is Hakaze or Gyofu && LevelChecked(Yukikaze))
                             return Yukikaze;
                     }
-                    return Hakaze;
+                    return OriginalHook(Hakaze);
                 }
                 return actionID;
             }
@@ -143,13 +143,13 @@ namespace XIVSlothCombo.Combos.PvE
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte levels)
             {
                 SAMGauge? gauge = GetJobGauge<SAMGauge>();
-                float SamKenkiOvercapAmount = Config.SAM_ST_KenkiOvercapAmount;
+                float SAM_ST_KenkiOvercapAmount = Config.SAM_ST_KenkiOvercapAmount;
 
                 if (actionID is Kasha)
                 {
                     if (CanWeave(actionID))
                     {
-                        if (gauge.Kenki >= SamKenkiOvercapAmount && LevelChecked(Shinten))
+                        if (gauge.Kenki >= SAM_ST_KenkiOvercapAmount && LevelChecked(Shinten))
                             return Shinten;
                     }
                     if (HasEffect(Buffs.MeikyoShisui))
@@ -157,13 +157,13 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (comboTime > 0)
                     {
-                        if (lastComboMove is Hakaze && LevelChecked(Shifu))
+                        if (lastComboMove is Hakaze or Gyofu && LevelChecked(Shifu))
                             return Shifu;
 
                         if (lastComboMove is Shifu && LevelChecked(Kasha))
                             return Kasha;
                     }
-                    return Hakaze;
+                    return OriginalHook(Hakaze);
                 }
                 return actionID;
             }
@@ -336,6 +336,11 @@ namespace XIVSlothCombo.Combos.PvE
                     if (WasLastWeaponskill(TendoSetsugekka) && HasEffect(Buffs.TendoKaeshiSetsugekkaReady))
                         return true;
 
+                    //failsafe
+                    if ((HasEffect(Buffs.KaeshiSetsugekkaReady) && GetBuffRemainingTime(Buffs.KaeshiSetsugekkaReady) <= 6) ||
+                        (HasEffect(Buffs.TendoKaeshiSetsugekkaReady) && GetBuffRemainingTime(Buffs.TendoKaeshiGokenReady) <= 6))
+                        return true;
+
                     if (HasEffect(Buffs.KaeshiSetsugekkaReady))
                     {
                         //1 and 2 min
@@ -444,8 +449,7 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         if (IsEnabled(CustomComboPreset.SAM_ST_Shinten) &&
-                            LevelChecked(Shinten) && gauge.Kenki > 50 &&
-                            !HasEffect(Buffs.ZanshinReady) &&
+                            LevelChecked(Shinten) && !HasEffect(Buffs.ZanshinReady) &&
                             ((gauge.Kenki >= kenkiOvercap) ||
                             (enemyHP <= shintenTreshhold)))
                             return Shinten;
@@ -555,6 +559,11 @@ namespace XIVSlothCombo.Combos.PvE
                 {
                     //Tendo
                     if (WasLastWeaponskill(TendoSetsugekka) && HasEffect(Buffs.TendoKaeshiSetsugekkaReady))
+                        return true;
+
+                    //failsafe
+                    if ((HasEffect(Buffs.KaeshiSetsugekkaReady) && GetBuffRemainingTime(Buffs.KaeshiSetsugekkaReady) <= 6) ||
+                        (HasEffect(Buffs.TendoKaeshiSetsugekkaReady) && GetBuffRemainingTime(Buffs.TendoKaeshiGokenReady) <= 6))
                         return true;
 
                     if (HasEffect(Buffs.KaeshiSetsugekkaReady))
@@ -802,7 +811,7 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         if (IsEnabled(CustomComboPreset.SAM_AoE_Kyuten) &&
-                            Kyuten.LevelChecked() && gauge.Kenki >= 50 &&
+                            Kyuten.LevelChecked() &&
                             ((IsOnCooldown(Guren) && LevelChecked(Guren)) ||
                             (gauge.Kenki >= kenkiOvercap)))
                             return Kyuten;

@@ -3204,14 +3204,13 @@ namespace XIVSlothCombo.Combos
         #region Yukikaze/Kasha Combos
 
         [ReplaceSkill(SAM.Yukikaze)]
-        [ConflictingCombos(SAM_ST_Yukikaze)]
         [CustomComboInfo("Yukikaze Combo", "Replace Yukikaze with its combo chain.", SAM.JobID)]
         SAM_ST_YukikazeCombo = 15000,
 
         [ReplaceSkill(SAM.Kasha)]
-        [ConflictingCombos(SAM_ST_Kasha)]
         [CustomComboInfo("Kasha Combo", "Replace Kasha with its combo chain.", SAM.JobID)]
         SAM_ST_KashaCombo = 15001,
+
         #endregion
 
         #region  Simple ST
@@ -3231,12 +3230,10 @@ namespace XIVSlothCombo.Combos
         SAM_ST_AdvancedMode = 15003,
 
         [ParentCombo(SAM_ST_AdvancedMode)]
-        [ConflictingCombos(SAM_ST_YukikazeCombo)]
         [CustomComboInfo("Yukikaze Combo", "Adds Yukikaze combo to the rotation.", SAM.JobID)]
         SAM_ST_Yukikaze = 15004,
 
         [ParentCombo(SAM_ST_AdvancedMode)]
-        [ConflictingCombos(SAM_ST_KashaCombo)]
         [CustomComboInfo("Kasha Combo", "Adds Kasha combo to the rotation.", SAM.JobID)]
         SAM_ST_Kasha = 15005,
 
