@@ -209,7 +209,8 @@ namespace XIVSlothCombo.Combos.PvE
                     if (CanWeave(actionID))
                     {
                         //Meikyo Features
-                        if (ActionReady(MeikyoShisui) && WasLastWeaponskill(MidareSetsugekka))
+                        if (!HasEffect(Buffs.MeikyoShisui) &&
+                           ActionReady(MeikyoShisui) && JustUsed(MidareSetsugekka, 1))
                             return MeikyoShisui;
 
                         //Ikishoten Features
@@ -238,10 +239,8 @@ namespace XIVSlothCombo.Combos.PvE
                         if (LevelChecked(Shoha) && gauge.MeditationStacks is 3)
                             return Shoha;
 
-                        if (LevelChecked(Shinten) && gauge.Kenki > 50 &&
-                            !HasEffect(Buffs.ZanshinReady) &&
-                            ((gauge.Kenki >= 50) ||
-                            (enemyHP <= 1)))
+                        if (LevelChecked(Shinten) && !HasEffect(Buffs.ZanshinReady) &&
+                            (gauge.Kenki >= 50 || enemyHP <= 1))
                             return Shinten;
                     }
 
@@ -266,11 +265,13 @@ namespace XIVSlothCombo.Combos.PvE
                                 return OriginalHook(TsubameGaeshi);
 
                             if (!IsMoving &&
-                                ((oneSeal && GetDebuffRemainingTime(Debuffs.Higanbana) <= 10 && enemyHP > 1 && !LevelChecked(Traits.EnhancedMeikyoShishui2)) ||
-                                (oneSeal && enemyHP > 1 && LevelChecked(Traits.EnhancedMeikyoShishui2) && !HasEffect(Buffs.Tendo) && WasLastWeaponskill(Gekko)) ||
+                                ((oneSeal && enemyHP > 1 &&
+                                ((!TraitLevelChecked(Traits.EnhancedMeikyoShishui2) && GetDebuffRemainingTime(Debuffs.Higanbana) <= 10) ||
+                                (TraitLevelChecked(Traits.EnhancedMeikyoShishui2) && !HasEffect(Buffs.Tendo) && WasLastWeaponskill(Gekko)))) ||
                                 (twoSeal && !LevelChecked(MidareSetsugekka)) ||
-                                (threeSeal && LevelChecked(MidareSetsugekka)) ||
-                                (threeSeal && LevelChecked(TendoSetsugekka) && !HasEffect(Buffs.KaeshiSetsugekkaReady))))
+                                (threeSeal &&
+                                (LevelChecked(MidareSetsugekka) ||
+                                (LevelChecked(TendoSetsugekka) && !HasEffect(Buffs.KaeshiSetsugekkaReady))))))
                                 return OriginalHook(Iaijutsu);
                         }
                     }
@@ -291,13 +292,11 @@ namespace XIVSlothCombo.Combos.PvE
                     }
 
                     // healing
-
                     if (PlayerHealthPercentageHp() <= 25 && ActionReady(All.SecondWind))
                         return All.SecondWind;
 
                     if (PlayerHealthPercentageHp() <= 40 && ActionReady(All.Bloodbath))
                         return All.Bloodbath;
-
 
                     if (comboTime > 0)
                     {
@@ -330,7 +329,8 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 int MeikyoUsed = ActionWatching.CombatActions.Count(x => x == MeikyoShisui);
 
-                if (LevelChecked(TsubameGaeshi))
+                if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu) &&
+                    LevelChecked(TsubameGaeshi))
                 {
                     //Tendo
                     if (WasLastWeaponskill(TendoSetsugekka) && HasEffect(Buffs.TendoKaeshiSetsugekkaReady))
