@@ -210,7 +210,7 @@ namespace XIVSlothCombo.Combos.PvE
                     {
                         //Meikyo Features
                         if (!HasEffect(Buffs.MeikyoShisui) &&
-                           ActionReady(MeikyoShisui) && JustUsed(MidareSetsugekka, 1))
+                           ActionReady(MeikyoShisui) && JustUsed(MidareSetsugekka, 3))
                             return MeikyoShisui;
 
                         //Ikishoten Features
@@ -231,7 +231,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                         //Zanshin Usage
                         if (LevelChecked(Zanshin) && gauge.Kenki >= 50 &&
-                            CanWeave(actionID) && HasEffect(Buffs.ZanshinReady) &&
+                            GetTargetDistance() <= 8 && HasEffect(Buffs.ZanshinReady) &&
                             ((meikyostacks is 2 && WasLastWeaponskill(Gekko)) ||
                             GetBuffRemainingTime(Buffs.ZanshinReady) <= 6))
                             return OriginalHook(Ikishoten);
@@ -250,7 +250,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (HasEffect(Buffs.Fugetsu) && HasEffect(Buffs.Fuka))
                     {
                         //Ogi Namikiri Features
-                        if (!IsMoving &&
+                        if (!IsMoving && GetTargetDistance() <= 8 &&
                             LevelChecked(OgiNamikiri) &&
                             (gauge.Kaeshi == Kaeshi.NAMIKIRI ||
                             (HasEffect(Buffs.OgiNamikiriReady) && !HasEffect(Buffs.ZanshinReady) &&
@@ -259,7 +259,7 @@ namespace XIVSlothCombo.Combos.PvE
                             return OriginalHook(OgiNamikiri);
 
                         // Iaijutsu Features
-                        if (LevelChecked(Iaijutsu))
+                        if (LevelChecked(Iaijutsu) && GetTargetDistance() <= 6)
                         {
                             if (UseTsubame())
                                 return OriginalHook(TsubameGaeshi);
@@ -415,7 +415,7 @@ namespace XIVSlothCombo.Combos.PvE
                             //Meikyo Features
                             if (IsEnabled(CustomComboPreset.SAM_ST_CDs_MeikyoShisui) &&
                                !HasEffect(Buffs.MeikyoShisui) &&
-                               ActionReady(MeikyoShisui) && JustUsed(MidareSetsugekka, 1))
+                               ActionReady(MeikyoShisui) && JustUsed(MidareSetsugekka, 3))
                                 return MeikyoShisui;
 
                             //Ikishoten Features
@@ -437,8 +437,9 @@ namespace XIVSlothCombo.Combos.PvE
 
                             //Zanshin Usage
                             if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Zanshin) &&
+                                GetTargetDistance() <= 8 &&
                                 LevelChecked(Zanshin) && gauge.Kenki >= 50 &&
-                                CanWeave(actionID) && HasEffect(Buffs.ZanshinReady) &&
+                                GetTargetDistance() <= 8 && HasEffect(Buffs.ZanshinReady) &&
                                 ((meikyostacks is 2 && WasLastWeaponskill(Gekko)) ||
                                 GetBuffRemainingTime(Buffs.ZanshinReady) <= 6))
                                 return OriginalHook(Ikishoten);
@@ -466,7 +467,7 @@ namespace XIVSlothCombo.Combos.PvE
                         if (IsEnabled(CustomComboPreset.SAM_ST_CDs_OgiNamikiri) &&
                             (!IsEnabled(CustomComboPreset.SAM_ST_CDs_OgiNamikiri_Movement) ||
                             (IsEnabled(CustomComboPreset.SAM_ST_CDs_OgiNamikiri_Movement) && !IsMoving)) &&
-                            LevelChecked(OgiNamikiri) &&
+                            LevelChecked(OgiNamikiri) && GetTargetDistance() <= 8 &&
                             (gauge.Kaeshi == Kaeshi.NAMIKIRI ||
                             (HasEffect(Buffs.OgiNamikiriReady) && !HasEffect(Buffs.ZanshinReady) &&
                             ((meikyostacks is 2 && WasLastWeaponskill(Higanbana)) ||
@@ -474,7 +475,8 @@ namespace XIVSlothCombo.Combos.PvE
                             return OriginalHook(OgiNamikiri);
 
                         // Iaijutsu Features
-                        if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu) && LevelChecked(Iaijutsu))
+                        if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu) && 
+                            LevelChecked(Iaijutsu) && GetTargetDistance() <= 6)
                         {
                             if (UseTsubame())
                                 return OriginalHook(TsubameGaeshi);
@@ -717,10 +719,12 @@ namespace XIVSlothCombo.Combos.PvE
                             return MeikyoShisui;
                     }
 
-                    if (LevelChecked(Zanshin) && HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50)
+                    if (LevelChecked(Zanshin) && HasEffect(Buffs.ZanshinReady) &&
+                        GetTargetDistance() <= 8 && gauge.Kenki >= 50)
                         return OriginalHook(Ikishoten);
 
-                    if (LevelChecked(OgiNamikiri) && ((!IsMoving && HasEffect(Buffs.OgiNamikiriReady)) || gauge.Kaeshi is Kaeshi.NAMIKIRI))
+                    if (LevelChecked(OgiNamikiri) && GetTargetDistance() <= 8 && 
+                        ((!IsMoving && HasEffect(Buffs.OgiNamikiriReady)) || gauge.Kaeshi is Kaeshi.NAMIKIRI))
                         return OriginalHook(OgiNamikiri);
 
                     if (LevelChecked(TenkaGoken))
@@ -826,14 +830,17 @@ namespace XIVSlothCombo.Combos.PvE
                     }
 
                     if (IsEnabled(CustomComboPreset.SAM_AoE_Zanshin) &&
-                        LevelChecked(Zanshin) && HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50)
+                        LevelChecked(Zanshin) && GetTargetDistance() <= 8 && 
+                        HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50)
                         return OriginalHook(Ikishoten);
 
                     if (IsEnabled(CustomComboPreset.SAM_AoE_OgiNamikiri) &&
-                        LevelChecked(OgiNamikiri) && ((!IsMoving && HasEffect(Buffs.OgiNamikiriReady)) || gauge.Kaeshi is Kaeshi.NAMIKIRI))
+                        LevelChecked(OgiNamikiri) && GetTargetDistance() <= 8 && 
+                        ((!IsMoving && HasEffect(Buffs.OgiNamikiriReady)) || gauge.Kaeshi is Kaeshi.NAMIKIRI))
                         return OriginalHook(OgiNamikiri);
 
-                    if (IsEnabled(CustomComboPreset.SAM_AoE_TenkaGoken) && LevelChecked(TenkaGoken))
+                    if (IsEnabled(CustomComboPreset.SAM_AoE_TenkaGoken) && 
+                        LevelChecked(TenkaGoken))
                     {
                         if (!IsMoving && (OriginalHook(Iaijutsu) is TenkaGoken))
                             return OriginalHook(Iaijutsu);
