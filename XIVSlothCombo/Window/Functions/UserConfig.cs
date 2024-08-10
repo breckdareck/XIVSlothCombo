@@ -1231,13 +1231,13 @@ namespace XIVSlothCombo.Window.Functions
             //AOE added
             if (preset is CustomComboPreset.AST_AOE_Lucid)
                 UserConfig.DrawSliderInt(4000, 9500, AST.Config.AST_LucidDreaming, "Set value for your MP to be at or under for this feature to work", 150, SliderIncrements.Hundreds);
-            
+
             if (preset is CustomComboPreset.AST_AOE_Divination)
                 UserConfig.DrawSliderInt(0, 100, AST.Config.AST_AOE_DivinationOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
 
             if (preset is CustomComboPreset.AST_AOE_LightSpeed)
                 UserConfig.DrawSliderInt(0, 100, AST.Config.AST_AOE_LightSpeedOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
-                        
+
             if (preset is CustomComboPreset.AST_AOE_AutoDraw)
             {
                 UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_AOE_DPS_OverwriteCards, "Overwrite Non-DPS Cards", "Will draw even if you have healing cards remaining.");
@@ -1270,12 +1270,12 @@ namespace XIVSlothCombo.Window.Functions
                 UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_WeaveExalt, "Only Weave", "Will only weave this action.");
 
             if (preset is CustomComboPreset.AST_ST_SimpleHeals_Spire)
-            { 
+            {
                 UserConfig.DrawSliderInt(0, 100, AST.Config.AST_Spire, "Set percentage value");
                 UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_WeaveSpire, "Only Weave", "Will only weave this action.");
             }
             if (preset is CustomComboPreset.AST_ST_SimpleHeals_Ewer)
-            {  
+            {
                 UserConfig.DrawSliderInt(0, 100, AST.Config.AST_Ewer, "Set percentage value");
                 UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_WeaveEwer, "Only Weave", "Will only weave this action.");
             }
@@ -2189,12 +2189,15 @@ namespace XIVSlothCombo.Window.Functions
 
             if (preset == CustomComboPreset.SAM_ST_Shinten)
             {
-                UserConfig.DrawSliderInt(50, 85, SAM.Config.SAM_ST_KenkiOvercapAmount, "Set the Kenki overcap amount for ST combos.");
+                UserConfig.DrawSliderInt(25, 100, SAM.Config.SAM_ST_KenkiOvercapAmount, "Set the Kenki overcap amount for ST combos.");
                 UserConfig.DrawSliderInt(0, 100, SAM.Config.SAM_ST_ExecuteThreshold, "HP percent threshold to not save Kenki", 150, SliderIncrements.Ones);
             }
 
+            if (preset == CustomComboPreset.SAM_ST_KashaCombo || preset == CustomComboPreset.SAM_ST_YukikazeCombo)
+                UserConfig.DrawSliderInt(25, 100, SAM.Config.SAM_ST_KenkiOvercapAmount, "Set the Kenki overcap amount for ST combos.");
+
             if (preset == CustomComboPreset.SAM_AoE_Kyuten)
-                UserConfig.DrawSliderInt(50, 85, SAM.Config.SAM_AoE_KenkiOvercapAmount, "Set the Kenki overcap amount for AOE combos.");
+                UserConfig.DrawSliderInt(25, 100, SAM.Config.SAM_AoE_KenkiOvercapAmount, "Set the Kenki overcap amount for AOE combos.");
 
             if (preset == CustomComboPreset.SAM_Variant_Cure)
                 UserConfig.DrawSliderInt(1, 100, SAM.Config.SAM_VariantCure, "HP% to be at or under", 200);
@@ -2398,11 +2401,11 @@ namespace XIVSlothCombo.Window.Functions
             // ====================================================================================
             #region VIPER
 
-           /* if ((preset == CustomComboPreset.VPR_ST_AdvancedMode && enabled) || (preset == CustomComboPreset.VPR_VicewinderCoils && enabled))
-            {
-                UserConfig.DrawHorizontalRadioButton(VPR.Config.VPR_Positional, "Rear First", "First positional: Swiftskin's Coil.", 0);
-                UserConfig.DrawHorizontalRadioButton(VPR.Config.VPR_Positional, "Flank First", "First positional: Hunter's Coil.", 1);
-            }*/
+            /* if ((preset == CustomComboPreset.VPR_ST_AdvancedMode && enabled) || (preset == CustomComboPreset.VPR_VicewinderCoils && enabled))
+             {
+                 UserConfig.DrawHorizontalRadioButton(VPR.Config.VPR_Positional, "Rear First", "First positional: Swiftskin's Coil.", 0);
+                 UserConfig.DrawHorizontalRadioButton(VPR.Config.VPR_Positional, "Flank First", "First positional: Hunter's Coil.", 1);
+             }*/
 
             if (preset == CustomComboPreset.VPR_ST_UncoiledFury && enabled)
             {
@@ -2522,7 +2525,7 @@ namespace XIVSlothCombo.Window.Functions
             if (preset == CustomComboPreset.WHM_AoE_DPS_PresenceOfMind)
                 UserConfig.DrawAdditionalBoolChoice(WHM.Config.WHM_AoEDPS_PresenceOfMindWeave, "Only Weave or Use Whilst Moving.", "Holy has no weave window so this can only be used to weave against healing or single target damage spells.\n\n" +
                     "This will minimize the amount of GCD delay you will get but reduce the frequency it will be used.");
-                
+
             if (preset == CustomComboPreset.WHM_AoEHeals_Lucid)
                 UserConfig.DrawSliderInt(4000, 9500, WHM.Config.WHM_AoEHeals_Lucid, "Set value for your MP to be at or under for this feature to work", 150, SliderIncrements.Hundreds);
 
