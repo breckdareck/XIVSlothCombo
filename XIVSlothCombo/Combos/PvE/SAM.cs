@@ -210,7 +210,7 @@ namespace XIVSlothCombo.Combos.PvE
                     {
                         //Meikyo Features
                         if (!HasEffect(Buffs.MeikyoShisui) &&
-                           ActionReady(MeikyoShisui) && JustUsed(MidareSetsugekka, 3))
+                           ActionReady(MeikyoShisui) && WasLastWeaponskill(MidareSetsugekka))
                             return MeikyoShisui;
 
                         //Ikishoten Features
@@ -415,7 +415,7 @@ namespace XIVSlothCombo.Combos.PvE
                             //Meikyo Features
                             if (IsEnabled(CustomComboPreset.SAM_ST_CDs_MeikyoShisui) &&
                                !HasEffect(Buffs.MeikyoShisui) &&
-                               ActionReady(MeikyoShisui) && JustUsed(MidareSetsugekka, 3))
+                               ActionReady(MeikyoShisui) && WasLastWeaponskill(MidareSetsugekka))
                                 return MeikyoShisui;
 
                             //Ikishoten Features
