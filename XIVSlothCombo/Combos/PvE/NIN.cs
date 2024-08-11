@@ -22,7 +22,7 @@ namespace XIVSlothCombo.Combos.PvE
             Hide = 2245,
             Assassinate = 2246,
             ThrowingDaggers = 2247,
-            Dokumori = 2248,
+            Mug = 2248,
             DeathBlossom = 2254,
             AeolianEdge = 2255,
             TrickAttack = 2258,
@@ -39,6 +39,7 @@ namespace XIVSlothCombo.Combos.PvE
             FleetingRaiju = 25778,
             Hellfrog = 7401,
             HollowNozuchi = 25776,
+            Dokumori = 36957,
             KunaisBane = 36958,
             DeathfrogMedium = 36959,
             ZeshoMeppo = 36960,
@@ -95,14 +96,16 @@ namespace XIVSlothCombo.Combos.PvE
                 Doton = 501,
                 Bunshin = 1954,
                 Higi = 3850,
-                TenriJindoReady = 3851;
+                TenriJindoReady = 3851,
+                ShadowWalker = 3848;
         }
 
         public static class Debuffs
         {
             public const ushort
                 TrickAttack = 3254,
-                Mug = 638;
+                Mug = 3183,
+                Dokumori = 3849;
         }
 
         public static class Traits
