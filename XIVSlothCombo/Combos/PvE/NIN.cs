@@ -22,7 +22,7 @@ namespace XIVSlothCombo.Combos.PvE
             Hide = 2245,
             Assassinate = 2246,
             ThrowingDaggers = 2247,
-            Dokumori = 2248,
+            Mug = 2248,
             DeathBlossom = 2254,
             AeolianEdge = 2255,
             TrickAttack = 2258,
@@ -39,6 +39,7 @@ namespace XIVSlothCombo.Combos.PvE
             FleetingRaiju = 25778,
             Hellfrog = 7401,
             HollowNozuchi = 25776,
+            Dokumori = 36957,
             KunaisBane = 36958,
             DeathfrogMedium = 36959,
             ZeshoMeppo = 36960,
@@ -95,14 +96,16 @@ namespace XIVSlothCombo.Combos.PvE
                 Doton = 501,
                 Bunshin = 1954,
                 Higi = 3850,
-                TenriJindoReady = 3851;
+                TenriJindoReady = 3851,
+                ShadowWalker = 3848;
         }
 
         public static class Debuffs
         {
             public const ushort
                 TrickAttack = 3254,
-                Mug = 638;
+                Mug = 3183,
+                Dokumori = 3849;
         }
 
         public static class Traits
@@ -595,7 +598,7 @@ namespace XIVSlothCombo.Combos.PvE
                 {
                     NINGauge gauge = GetJobGauge<NINGauge>();
                     bool canWeave = CanWeave(SpinningEdge);
-                    bool inTrickBurstSaveWindow = GetCooldownRemainingTime(OriginalHook(TrickAttack)) <= 15 && Suiton.LevelChecked();
+                    bool inTrickBurstSaveWindow = GetCooldownRemainingTime(OriginalHook(TrickAttack)) <= 36 && Suiton.LevelChecked();
                     bool useBhakaBeforeTrickWindow = GetCooldownRemainingTime(OriginalHook(TrickAttack)) >= 3;
                     bool inMudraState = HasEffect(Buffs.Mudra);
 
@@ -605,11 +608,11 @@ namespace XIVSlothCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.NIN_ST_SimpleMode_BalanceOpener) && NINOpenerLogic.LevelChecked && NINOpener.DoFullOpener(ref actionID, mudraState))
                         return actionID;
 
-                    if (HasEffect(Buffs.TenChiJin))
+                    if (HasEffect(Buffs.TenriJindoReady))
                     {
                         if (WasLastAction(TCJFumaShurikenTen)) return OriginalHook(Chi);
                         if (WasLastAction(TCJRaiton)) return OriginalHook(Jin);
-                        return OriginalHook(Ten);
+                        return OriginalHook(WasLastAction(TCJSuiton) ? TenriJindo : Ten);
                     }
 
                     if (mudraState.CurrentMudra != MudraCasting.MudraState.None)
@@ -624,14 +627,15 @@ namespace XIVSlothCombo.Combos.PvE
                     if (mudraState.CastHyoshoRanryu(ref actionID))
                         return actionID;
 
-                    if (GetCooldownRemainingTime(OriginalHook(TrickAttack)) < 15 && OriginalHook(TrickAttack).LevelChecked() && !HasEffect(Buffs.Suiton))
+                    if (GetCooldownRemainingTime(OriginalHook(TrickAttack)) < 15 && OriginalHook(TrickAttack).LevelChecked() && !HasEffect(Buffs.ShadowWalker))
                         if (mudraState.CastSuiton(ref actionID))
                             return actionID;
 
                     if (!inTrickBurstSaveWindow)
                     {
-                        if (mudraState.CastRaiton(ref actionID))
-                            return actionID;
+                            if (mudraState.CastRaiton(ref actionID))
+                                return actionID;
+                        
                     }
 
                     if (canWeave && !inMudraState)
@@ -643,8 +647,11 @@ namespace XIVSlothCombo.Combos.PvE
 
                         if (Bunshin.LevelChecked() && IsOffCooldown(Bunshin) && gauge.Ninki >= 50)
                             return OriginalHook(Bunshin);
+                        
+                        if (IsOffCooldown(Dokumori) && Dokumori.LevelChecked())
+                            return OriginalHook(Dokumori);
 
-                        if (HasEffect(Buffs.Suiton) && IsOffCooldown(OriginalHook(TrickAttack)))
+                        if (HasEffect(Buffs.ShadowWalker) && IsOffCooldown(OriginalHook(TrickAttack)))
                             return OriginalHook(TrickAttack);
 
                         if (Bhavacakra.LevelChecked() && ((TargetHasEffect(Debuffs.TrickAttack) && gauge.Ninki >= 50) || (useBhakaBeforeTrickWindow && gauge.Ninki == 100)))
@@ -655,11 +662,11 @@ namespace XIVSlothCombo.Combos.PvE
 
                         if (!inTrickBurstSaveWindow)
                         {
-                            if (HasEffect(Buffs.Suiton) && gauge.Ninki <= 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
+                            if (IsOffCooldown(Kassatsu) && Kassatsu.LevelChecked())
+                                return OriginalHook(Kassatsu);
+                            
+                            if (HasEffect(Buffs.ShadowWalker) && gauge.Ninki <= 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
                                 return OriginalHook(Meisui);
-
-                            if (IsOffCooldown(Dokumori) && Dokumori.LevelChecked())
-                                return OriginalHook(Dokumori);
 
                             if (gauge.Ninki >= 85 && Bhavacakra.LevelChecked())
                                 return OriginalHook(Bhavacakra);
@@ -669,9 +676,6 @@ namespace XIVSlothCombo.Combos.PvE
 
                             if (IsOffCooldown(TenChiJin) && TenChiJin.LevelChecked())
                                 return OriginalHook(TenChiJin);
-
-                            if (IsOffCooldown(Kassatsu) && Kassatsu.LevelChecked())
-                                return OriginalHook(Kassatsu);
                         }
                     }
                     else
@@ -688,13 +692,13 @@ namespace XIVSlothCombo.Combos.PvE
                         if (lastComboMove == SpinningEdge && GustSlash.LevelChecked())
                             return OriginalHook(GustSlash);
 
-                        if (lastComboMove == GustSlash && ArmorCrush.LevelChecked())
+                        if (lastComboMove == GustSlash && ArmorCrush.LevelChecked() && gauge.Kazematoi < 4)
                             return OriginalHook(ArmorCrush);
 
-                        if (lastComboMove == GustSlash && TargetNeedsPositionals() && GetRemainingCharges(All.TrueNorth) > 0 && All.TrueNorth.LevelChecked() && !HasEffect(All.Buffs.TrueNorth) && canWeave)
+                        if (lastComboMove == GustSlash && TargetNeedsPositionals() && !OnTargetsRear() && GetRemainingCharges(All.TrueNorth) > 0 && All.TrueNorth.LevelChecked() && !HasEffect(All.Buffs.TrueNorth) && canWeave)
                             return OriginalHook(All.TrueNorth);
 
-                        if (lastComboMove == GustSlash && AeolianEdge.LevelChecked())
+                        if (lastComboMove == GustSlash && AeolianEdge.LevelChecked() && gauge.Kazematoi > 0)
                             return OriginalHook(AeolianEdge);
                     }
 
@@ -776,7 +780,7 @@ namespace XIVSlothCombo.Combos.PvE
                         if (IsOffCooldown(Bunshin) && gauge.Ninki >= 50 && Bunshin.LevelChecked())
                             return OriginalHook(Bunshin);
 
-                        if (HasEffect(Buffs.Suiton) && gauge.Ninki < 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
+                        if (HasEffect(Buffs.ShadowWalker) && gauge.Ninki < 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
                             return OriginalHook(Meisui);
 
                         if (HasEffect(Buffs.Meisui) && gauge.Ninki >= 50)
@@ -885,7 +889,7 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == Kassatsu)
                 {
-                    if (HasEffect(Buffs.Suiton) || HasEffect(Buffs.Hidden))
+                    if (HasEffect(Buffs.ShadowWalker) || HasEffect(Buffs.Hidden))
                     {
                         return OriginalHook(TrickAttack);
                     }
@@ -904,7 +908,7 @@ namespace XIVSlothCombo.Combos.PvE
                 if (actionID == TenChiJin)
                 {
 
-                    if (HasEffect(Buffs.Suiton))
+                    if (HasEffect(Buffs.ShadowWalker))
                         return Meisui;
 
                     if (HasEffect(Buffs.TenChiJin) && IsEnabled(CustomComboPreset.NIN_TCJ))
